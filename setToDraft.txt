@@ -1,0 +1,23 @@
+function set_draft_when_zero() {
+
+$product_id = $wpdb->get_results( $wpdb->prepare('SELECT product_id,stock_quantity FROM wp_wc_product_meta_lookup WHERE stock_quantity <= 0;'));
+
+
+foreach ($product_id as $obj)
+{
+   if($obj->stock_quantity <= 0 && get_post_status($obj->product_id) === "publish")
+   {
+		// print_r($obj);
+wp_update_post(
+        array( 
+            'ID' =>  $obj->product_id, 
+            'post_status' => 'draft'
+        )
+    );
+   }
+	else{
+			
+	}
+     }
+	}
+add_action( 'plugins_loaded', 'set_draft_when_zero' );
